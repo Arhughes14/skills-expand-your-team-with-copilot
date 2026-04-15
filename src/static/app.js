@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   // DOM elements
+  const SCHOOL_NAME = "Mergington High School";
   const activitiesList = document.getElementById("activities-list");
   const messageDiv = document.getElementById("message");
   const registrationModal = document.getElementById("registration-modal");
@@ -185,7 +186,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Remove risky characters for plain-text values used in UI state and sharing
   function sanitizePlainText(value) {
-    return String(value).replace(/[<>"'&]/g, "").trim();
+    return String(value)
+      .normalize("NFKC")
+      .replace(/[\u0000-\u001F\u007F]/g, "")
+      .replace(/[<>"'&`]/g, "")
+      .trim()
+      .slice(0, 120);
   }
 
   // Initialize search from URL when users open a shared activity link
@@ -542,10 +548,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
-    const shareActivityName = sanitizePlainText(name);
-    const safeActivityName = escapeHtml(shareActivityName);
-    const shareUrl = buildActivityShareUrl(shareActivityName);
-    const shareText = `Check out ${shareActivityName} at Mergington High School!`;
+    const sanitizedActivityName = sanitizePlainText(name);
+    const htmlEscapedActivityName = escapeHtml(sanitizedActivityName);
+    const shareUrl = buildActivityShareUrl(sanitizedActivityName);
+    const shareText = `Check out ${sanitizedActivityName} at ${SCHOOL_NAME}!`;
     const encodedShareUrl = encodeURIComponent(shareUrl);
     const encodedShareText = encodeURIComponent(shareText);
     const whatsappText = encodeURIComponent(`${shareText} ${shareUrl}`);
@@ -626,7 +632,7 @@ document.addEventListener("DOMContentLoaded", () => {
           href="https://x.com/intent/tweet?text=${encodedShareText}&url=${encodedShareUrl}"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Share ${safeActivityName} on X"
+          aria-label="Share ${htmlEscapedActivityName} on X"
         >
           Share on X
         </a>
@@ -635,7 +641,7 @@ document.addEventListener("DOMContentLoaded", () => {
           href="https://www.facebook.com/sharer/sharer.php?u=${encodedShareUrl}"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Share ${safeActivityName} on Facebook"
+          aria-label="Share ${htmlEscapedActivityName} on Facebook"
         >
           Share on Facebook
         </a>
@@ -644,7 +650,7 @@ document.addEventListener("DOMContentLoaded", () => {
           href="https://wa.me/?text=${whatsappText}"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Share ${safeActivityName} on WhatsApp"
+          aria-label="Share ${htmlEscapedActivityName} on WhatsApp"
         >
           Share on WhatsApp
         </a>
