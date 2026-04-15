@@ -32,6 +32,23 @@
   --info-light: #d1ecf1;
 }
 
+body.dark-mode {
+  --primary: #3949ab;
+  --primary-light: #5c6bc0;
+  --primary-dark: #1a237e;
+  --background: #121212;
+  --surface: #1e1e1e;
+  --text-primary: #f1f1f1;
+  --text-secondary: #c7c7c7;
+  --border: #3a3a3a;
+  --border-light: #2b2b2b;
+  --border-focus: #4b4b4b;
+  --success-light: #1e3a23;
+  --warning-light: #403314;
+  --error-light: #451d1d;
+  --info-light: #12343b;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -617,11 +634,18 @@ footer {
   position: absolute;
   top: 10px;
   right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 #user-status {
   display: flex;
   align-items: center;
+}
+
+#theme-toggle {
+  padding: 4px 10px;
 }
 
 #user-info {
