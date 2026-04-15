@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   // DOM elements
-  const SCHOOL_NAME = "Mergington High School";
+  const SCHOOL_NAME =
+    document.querySelector("header h1")?.textContent?.trim() ||
+    "Mergington High School";
   const activitiesList = document.getElementById("activities-list");
   const messageDiv = document.getElementById("message");
   const registrationModal = document.getElementById("registration-modal");
@@ -553,7 +555,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const shareUrl = buildActivityShareUrl(sanitizedActivityName);
     const shareText = `Check out ${sanitizedActivityName} at ${SCHOOL_NAME}!`;
     const encodedShareUrl = encodeURIComponent(shareUrl);
-    const encodedShareText = encodeURIComponent(shareText);
+    const xShareText = encodeURIComponent(`${shareText} ${shareUrl}`);
     const whatsappText = encodeURIComponent(`${shareText} ${shareUrl}`);
 
     // Create activity tag
@@ -629,7 +631,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="activity-social-share">
         <a
           class="share-button"
-          href="https://x.com/intent/tweet?text=${encodedShareText}&url=${encodedShareUrl}"
+          href="https://x.com/intent/tweet?text=${xShareText}"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Share ${htmlEscapedActivityName} on X"
