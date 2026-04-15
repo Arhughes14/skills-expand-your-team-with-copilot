@@ -448,11 +448,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Apply difficulty filter
-      if (currentDifficulty === "all") {
-        if (details.difficulty_level) {
-          return;
-        }
-      } else if (details.difficulty_level !== currentDifficulty) {
+      const matchesDifficulty =
+        currentDifficulty === "all"
+          ? !details.difficulty_level
+          : details.difficulty_level === currentDifficulty;
+
+      if (!matchesDifficulty) {
         return;
       }
 
