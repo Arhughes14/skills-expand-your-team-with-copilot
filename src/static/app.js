@@ -184,6 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     searchQuery = sharedActivity.trim();
     searchInput.value = searchQuery;
+
+    if (Object.keys(allActivities).length > 0) {
+      displayFilteredActivities();
+    }
   }
 
   // Login function
@@ -597,7 +601,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="activity-social-share">
         <a
           class="share-button"
-          href="https://twitter.com/intent/tweet?text=${encodedShareText}&url=${encodedShareUrl}"
+          href="https://x.com/intent/tweet?text=${encodedShareText}&url=${encodedShareUrl}"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Share ${name} on X"
