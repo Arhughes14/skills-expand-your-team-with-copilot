@@ -173,6 +173,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return shareUrl.toString();
   }
 
+  // Escape text before inserting into HTML attributes
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   // Initialize search from URL when users open a shared activity link
   function initializeSearchFromURL() {
     const params = new URLSearchParams(window.location.search);
@@ -522,8 +532,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
+    const safeActivityName = escapeHtml(name);
+    const shareActivityName = String(name).replace(/[<>]/g, "").trim();
     const shareUrl = buildActivityShareUrl(name);
-    const shareText = `Check out ${name} at Mergington High School!`;
+    const shareText = `Check out ${shareActivityName} at Mergington High School!`;
     const encodedShareUrl = encodeURIComponent(shareUrl);
     const encodedShareText = encodeURIComponent(shareText);
     const whatsappText = encodeURIComponent(`${shareText} ${shareUrl}`);
@@ -604,7 +616,7 @@ document.addEventListener("DOMContentLoaded", () => {
           href="https://x.com/intent/tweet?text=${encodedShareText}&url=${encodedShareUrl}"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Share ${name} on X"
+          aria-label="Share ${safeActivityName} on X"
         >
           Share on X
         </a>
@@ -613,7 +625,7 @@ document.addEventListener("DOMContentLoaded", () => {
           href="https://www.facebook.com/sharer/sharer.php?u=${encodedShareUrl}"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Share ${name} on Facebook"
+          aria-label="Share ${safeActivityName} on Facebook"
         >
           Share on Facebook
         </a>
@@ -622,7 +634,7 @@ document.addEventListener("DOMContentLoaded", () => {
           href="https://wa.me/?text=${whatsappText}"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Share ${name} on WhatsApp"
+          aria-label="Share ${safeActivityName} on WhatsApp"
         >
           Share on WhatsApp
         </a>
