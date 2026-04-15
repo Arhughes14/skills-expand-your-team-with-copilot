@@ -166,6 +166,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Build a shareable URL that opens this page with a pre-filled activity search
+  function buildActivityShareUrl(activityName) {
+    const shareUrl = new URL(window.location.href);
+    shareUrl.searchParams.set("activity", activityName);
+    return shareUrl.toString();
+  }
+
+  // Initialize search from URL when users open a shared activity link
+  function initializeSearchFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const sharedActivity = params.get("activity");
+
+    if (!sharedActivity) {
+      return;
+    }
+
+    searchQuery = sharedActivity.trim();
+    searchInput.value = searchQuery;
+  }
+
   // Login function
   async function login(username, password) {
     try {
@@ -498,6 +518,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
+    const shareUrl = buildActivityShareUrl(name);
+    const shareText = `Check out ${name} at Mergington High School!`;
+    const encodedShareUrl = encodeURIComponent(shareUrl);
+    const encodedShareText = encodeURIComponent(shareText);
+    const whatsappText = encodeURIComponent(`${shareText} ${shareUrl}`);
 
     // Create activity tag
     const tagHtml = `
@@ -568,6 +593,35 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `
         }
+      </div>
+      <div class="activity-social-share">
+        <a
+          class="share-button"
+          href="https://twitter.com/intent/tweet?text=${encodedShareText}&url=${encodedShareUrl}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Share ${name} on X"
+        >
+          Share on X
+        </a>
+        <a
+          class="share-button"
+          href="https://www.facebook.com/sharer/sharer.php?u=${encodedShareUrl}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Share ${name} on Facebook"
+        >
+          Share on Facebook
+        </a>
+        <a
+          class="share-button"
+          href="https://wa.me/?text=${whatsappText}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Share ${name} on WhatsApp"
+        >
+          Share on WhatsApp
+        </a>
       </div>
     `;
 
@@ -864,5 +918,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize app
   checkAuthentication();
   initializeFilters();
+  initializeSearchFromURL();
   fetchActivities();
 });
