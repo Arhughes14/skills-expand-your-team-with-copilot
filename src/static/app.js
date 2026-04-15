@@ -183,6 +183,11 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/'/g, "&#39;");
   }
 
+  // Remove risky characters for plain-text values used in UI state and sharing
+  function sanitizePlainText(value) {
+    return String(value).replace(/[<>"'&]/g, "").trim();
+  }
+
   // Initialize search from URL when users open a shared activity link
   function initializeSearchFromURL() {
     const params = new URLSearchParams(window.location.search);
@@ -192,7 +197,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    searchQuery = sharedActivity.trim();
+    const sanitizedSharedActivity = sanitizePlainText(sharedActivity);
+    if (!sanitizedSharedActivity) {
+      return;
+    }
+
+    searchQuery = sanitizedSharedActivity;
     searchInput.value = searchQuery;
 
     if (Object.keys(allActivities).length > 0) {
@@ -532,9 +542,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
-    const safeActivityName = escapeHtml(name);
-    const shareActivityName = String(name).replace(/[<>]/g, "").trim();
-    const shareUrl = buildActivityShareUrl(name);
+    const shareActivityName = sanitizePlainText(name);
+    const safeActivityName = escapeHtml(shareActivityName);
+    const shareUrl = buildActivityShareUrl(shareActivityName);
     const shareText = `Check out ${shareActivityName} at Mergington High School!`;
     const encodedShareUrl = encodeURIComponent(shareUrl);
     const encodedShareText = encodeURIComponent(shareText);
